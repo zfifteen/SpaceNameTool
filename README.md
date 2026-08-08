@@ -1,3 +1,5 @@
+![SpaceNameTool](docs/assets/hero.png)
+
 # SpaceNameTool
 
 macOS **menu-bar** utility for **custom virtual desktop (Space) names**, built to the **SIP-safe** specification in `docs/`.
@@ -68,4 +70,4 @@ Resources/Info.plist
 
 ## License
 
-TBD
+MIT — see [LICENSE](LICENSE).
