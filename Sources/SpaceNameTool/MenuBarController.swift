@@ -7,6 +7,7 @@
 //
 
 import AppKit
+import ApplicationServices
 import SpaceNameToolCore
 
 @MainActor
@@ -270,18 +271,31 @@ final class MenuBarController: NSObject, SpaceMonitorDelegate {
     @objc private func jumpToSpace(_ sender: NSMenuItem) {
         guard let id = sender.representedObject as? String,
               let record = nameStore.record(persistentID: id) else { return }
-        if let message = SpaceJumpService.jump(to: record) {
-            let alert = NSAlert()
-            alert.messageText = "Switch Space"
-            alert.informativeText = message
-            alert.addButton(withTitle: "OK")
-            if message.contains("Control+") {
-                alert.addButton(withTitle: "Request Accessibility…")
-                if alert.runModal() == .alertSecondButtonReturn {
-                    SpaceJumpService.requestAccessibilityIfNeeded()
+
+        // Defer until after the status menu finishes tracking. Synthetic Control+Number
+        // events posted during menu tracking are often discarded (looks like “nothing happens”).
+        let target = record
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) { [weak self] in
+            guard let self else { return }
+            if let message = SpaceJumpService.jump(to: target) {
+                let alert = NSAlert()
+                alert.messageText = "Couldn’t switch Space automatically"
+                alert.informativeText = message
+                alert.addButton(withTitle: "OK")
+                if !AXIsProcessTrusted() {
+                    alert.addButton(withTitle: "Open Accessibility Settings…")
+                    if alert.runModal() == .alertSecondButtonReturn {
+                        SpaceJumpService.requestAccessibilityIfNeeded()
+                        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {
+                            NSWorkspace.shared.open(url)
+                        }
+                    }
+                } else {
+                    alert.runModal()
                 }
             } else {
-                alert.runModal()
+                // Successful jump path — refresh title/list for the new active Space.
+                self.spaceMonitor.refresh(reason: "menu-jump")
             }
         }
     }

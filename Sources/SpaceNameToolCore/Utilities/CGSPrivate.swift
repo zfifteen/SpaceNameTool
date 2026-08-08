@@ -46,13 +46,16 @@ public enum CGSPrivate {
     private typealias CGSMainConnectionID_t = @convention(c) () -> Int32
     private typealias CGSCopyManagedDisplaySpaces_t = @convention(c) (Int32) -> Unmanaged<CFArray>?
     private typealias CGSGetActiveSpace_t = @convention(c) (Int32) -> UInt64
-    /// CGSSetActiveSpace(connection, spaceID) — optional; may no-op under some OS builds.
+    /// CGSSetActiveSpace(connection, spaceID) — optional; often a no-op for third-party apps.
     private typealias CGSSetActiveSpace_t = @convention(c) (Int32, UInt64) -> Int32
+    /// CGSManagedDisplaySetCurrentSpace(connection, displayUUID, spaceID)
+    private typealias CGSManagedDisplaySetCurrentSpace_t = @convention(c) (Int32, CFString, UInt64) -> Int32
 
     private static var mainConnectionIDFn: CGSMainConnectionID_t?
     private static var copyManagedDisplaySpacesFn: CGSCopyManagedDisplaySpaces_t?
     private static var getActiveSpaceFn: CGSGetActiveSpace_t?
     private static var setActiveSpaceFn: CGSSetActiveSpace_t?
+    private static var managedDisplaySetCurrentSpaceFn: CGSManagedDisplaySetCurrentSpace_t?
 
     /// True when core read symbols resolved.
     public static var isAvailable: Bool {
@@ -84,14 +87,15 @@ public enum CGSPrivate {
         copyManagedDisplaySpacesFn = nil
         getActiveSpaceFn = nil
         setActiveSpaceFn = nil
+        managedDisplaySetCurrentSpaceFn = nil
     }
 
-    /// True when in-process Space switch symbol resolved (still runs under full SIP).
+    /// True when at least one in-process Space switch symbol resolved (still runs under full SIP).
     public static var isSetActiveSpaceAvailable: Bool {
         lock.lock()
         defer { lock.unlock() }
         ensureLoadedLocked()
-        return setActiveSpaceFn != nil
+        return setActiveSpaceFn != nil || managedDisplaySetCurrentSpaceFn != nil
     }
 
     public static func mainConnectionID() -> Result<ConnectionID, ResolveError> {
@@ -134,7 +138,14 @@ public enum CGSPrivate {
     }
 
     /// Attempts to activate a Space by managed id in this process only (tech spec §4.4 step 1).
-    public static func setActiveSpace(_ spaceID: UInt64, connection: ConnectionID? = nil) -> Result<Void, ResolveError> {
+    ///
+    /// Success means the active Space id actually changed (or already matched).
+    /// A zero CGError with no effect is treated as failure so callers can fall back.
+    public static func setActiveSpace(
+        _ spaceID: UInt64,
+        displayUUID: String? = nil,
+        connection: ConnectionID? = nil
+    ) -> Result<Void, ResolveError> {
         let conn: ConnectionID
         if let connection {
             conn = connection
@@ -145,19 +156,54 @@ public enum CGSPrivate {
             }
         }
 
+        // Already there.
+        if case .success(let current) = activeSpaceID(connection: conn), current == spaceID {
+            return .success(())
+        }
+
         lock.lock()
         ensureLoadedLocked()
-        let fn = setActiveSpaceFn
+        let setFn = setActiveSpaceFn
+        let managedFn = managedDisplaySetCurrentSpaceFn
         lock.unlock()
 
-        guard let fn else {
-            return .failure(.symbolNotFound("CGSSetActiveSpace"))
+        var attempted = false
+
+        // Prefer display-scoped switch when we have a UUID (more reliable on multi-display).
+        if let managedFn, let uuid = displayUUID, !uuid.isEmpty {
+            attempted = true
+            _ = managedFn(Int32(bitPattern: conn), uuid as CFString, spaceID)
+            if case .success(let current) = activeSpaceID(connection: conn), current == spaceID {
+                return .success(())
+            }
         }
-        let code = fn(Int32(bitPattern: conn), spaceID)
-        if code != 0 {
-            return .failure(.callFailed("CGSSetActiveSpace status \(code)"))
+
+        if let setFn {
+            attempted = true
+            _ = setFn(Int32(bitPattern: conn), spaceID)
+            // Brief settle — WindowServer updates are not always synchronous.
+            usleep(30_000)
+            if case .success(let current) = activeSpaceID(connection: conn), current == spaceID {
+                return .success(())
+            }
         }
-        return .success(())
+
+        // Retry managed with "Main" identifier when UUID path was skipped/failed.
+        if let managedFn {
+            attempted = true
+            for token in [displayUUID, "Main"].compactMap({ $0 }) where !token.isEmpty {
+                _ = managedFn(Int32(bitPattern: conn), token as CFString, spaceID)
+                usleep(30_000)
+                if case .success(let current) = activeSpaceID(connection: conn), current == spaceID {
+                    return .success(())
+                }
+            }
+        }
+
+        if !attempted {
+            return .failure(.symbolNotFound("CGSSetActiveSpace / CGSManagedDisplaySetCurrentSpace"))
+        }
+        return .failure(.callFailed("Space switch symbols present but active Space did not change"))
     }
 
     /// Parses `CGSCopyManagedDisplaySpaces` into live nodes.
@@ -303,13 +349,14 @@ public enum CGSPrivate {
         copyManagedDisplaySpacesFn = symbol(handle, "CGSCopyManagedDisplaySpaces")
         getActiveSpaceFn = symbol(handle, "CGSGetActiveSpace")
         setActiveSpaceFn = symbol(handle, "CGSSetActiveSpace")
+        managedDisplaySetCurrentSpaceFn = symbol(handle, "CGSManagedDisplaySetCurrentSpace")
 
         if mainConnectionIDFn == nil {
             loadError = .symbolNotFound("CGSMainConnectionID")
         } else if copyManagedDisplaySpacesFn == nil {
             loadError = .symbolNotFound("CGSCopyManagedDisplaySpaces")
         }
-        // getActiveSpace / setActiveSpace are optional; callers degrade gracefully.
+        // getActiveSpace / set symbols are optional; callers degrade gracefully.
     }
 
     private static func symbol<T>(_ handle: UnsafeMutableRawPointer, _ name: String) -> T? {
