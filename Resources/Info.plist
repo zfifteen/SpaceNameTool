@@ -35,9 +35,11 @@
 	<key>NSSupportsAutomaticGraphicsSwitching</key>
 	<true/>
 
-	<!-- Accessibility / input: request only when implementing overlay rename UX.
-	     No private TCC or SIP-related keys here. -->
+	<!-- Accessibility: used only for optional Ctrl+Number Space jump (tech spec §4.4). -->
+	<key>NSAppleEventsUsageDescription</key>
+	<string>SpaceNameTool uses Accessibility only to send Control+Number key events when you choose Jump to Space and CGS switching is unavailable.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © VelocityWorks. SIP-safe; no code injection.</string>
 </dict>
 </plist>
+

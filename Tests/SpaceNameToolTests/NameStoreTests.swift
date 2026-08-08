@@ -67,4 +67,31 @@ final class NameStoreTests: XCTestCase {
         XCTAssertEqual(store.allRecords().first?.customName, "")
         XCTAssertEqual(store.allRecords().first?.displayName, "Desktop 1")
     }
+
+    func testConcurrentSetNameIsSafe() {
+        let store = NameStore(directoryURL: tempDir)
+        let display = DisplayID(cgDirectDisplayID: 1, uuidString: "U1", localizedName: "Main")
+        let diff = store.applyLiveTopology([
+            LiveSpaceNode(managedSpaceID: 1, index: 0, display: display),
+            LiveSpaceNode(managedSpaceID: 2, index: 1, display: display)
+        ])
+        let ids = diff.activeRecords.map(\.persistentID)
+        let group = DispatchGroup()
+        for (i, id) in ids.enumerated() {
+            group.enter()
+            DispatchQueue.global().async {
+                store.setCustomName("N\(i)", persistentID: id)
+                group.leave()
+            }
+        }
+        XCTAssertEqual(group.wait(timeout: .now() + 5), .success)
+        XCTAssertEqual(store.allRecords().count, 2)
+    }
+
+    func testCorruptPlistDoesNotCrash() throws {
+        let plist = tempDir.appendingPathComponent(NameStore.plistFileName)
+        try Data("%not-plist%".utf8).write(to: plist)
+        let store = NameStore(directoryURL: tempDir)
+        XCTAssertTrue(store.allRecords().isEmpty)
+    }
 }

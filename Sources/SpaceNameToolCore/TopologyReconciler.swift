@@ -35,8 +35,22 @@ public enum TopologyReconciler {
         var matchedStoredIDs = Set<String>()
         var updatedByPersistentID: [String: SpaceRecord] = [:]
 
-        // --- Pass 1: ManagedSpaceID ---
+        // --- Pass 0: revive archived by ManagedSpaceID (FR-6 name survival) ---
         for (liveIndex, node) in live.enumerated() {
+            guard let mid = node.managedSpaceID else { continue }
+            guard let archIndex = archived.firstIndex(where: {
+                !matchedStoredIDs.contains($0.persistentID) && $0.managedSpaceID == mid
+            }) else { continue }
+            var record = archived.remove(at: archIndex)
+            record = touch(record, with: node, now: now)
+            updatedByPersistentID[record.persistentID] = record
+            matchedLiveIndices.insert(liveIndex)
+            matchedStoredIDs.insert(record.persistentID)
+        }
+
+        // --- Pass 1: ManagedSpaceID among active ---
+        for (liveIndex, node) in live.enumerated() {
+            guard !matchedLiveIndices.contains(liveIndex) else { continue }
             guard let mid = node.managedSpaceID else { continue }
             guard let storedIndex = activeStored.firstIndex(where: {
                 !matchedStoredIDs.contains($0.persistentID) && $0.managedSpaceID == mid

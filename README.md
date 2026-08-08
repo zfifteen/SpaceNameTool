@@ -1,54 +1,70 @@
 # SpaceNameTool
 
-macOS menu-bar utility that lets you assign **custom names to virtual desktops (Spaces)**.
+macOS **menu-bar** utility for **custom virtual desktop (Space) names**, built to the **SIP-safe** specification in `docs/`.
 
-## SIP-safe design
+Custom names appear in **this app** (menu bar, overlay, switcher, configuration). The Mission Control “Desktop N” strip is **not** modified.
 
-This project is built to keep **full System Integrity Protection (SIP) enabled**.
+## Security posture
 
-- **SIP-safe:** the app observes Spaces and stores names without weakening system integrity.
-- **No code injection:** never injects into Dock, WindowServer, or any other system process.
-- **No `csrutil` steps:** users do not run `csrutil disable` (or any related recovery commands).
-- **Hardened runtime / notarization path:** public entitlements only; no private entitlements that block notarization.
+- **Full System Integrity Protection stays enabled**
+- **No code injection** into Dock, WindowServer, or any system process
+- **No `csrutil`**, Recovery steps, LaunchDaemon, or privileged helper
+- Private CGS/SkyLight only via **dlsym**, fail closed if symbols disappear
+- Names live in `~/Library/Application Support/SpaceNameTool/` only
 
-Business logic (stable Space identity, keying algorithm, CGS read-only observation) is intentionally **not implemented** in this bootstrap skeleton. Wait for the SIP-safe specification documents before adding real implementation.
+## Install
 
-## Layout
-
-```
-SpaceNameTool/
-├── Package.swift
-├── README.md
-├── PLAN.md
-├── docs/                   # SIP-safe requirements / tech / security (source of truth)
-├── Resources/Info.plist    # LSUIElement = true
-├── Sources/
-│   ├── SpaceNameToolCore/  # NameStore, topology diff, CGS dlsym, SpaceMonitor
-│   └── SpaceNameTool/      # Menu bar app entry + deferred overlay/switcher
-└── Tests/SpaceNameToolTests/
+```bash
+./scripts/package-app.sh
+# Drag dist/SpaceNameTool.app to /Applications
 ```
 
-## Status
+Details: [`docs/PACKAGING.md`](docs/PACKAGING.md). Notarization needs a Developer ID (optional).
 
-Core path implemented against `docs/*-SIP-Safe.md`:
+## Use
 
-1. **NameStore + topology-diff keying** (`ManagedSpaceID` first, then display UUID + `creationOrder`)
-2. **SpaceMonitor** — notification-first (`NSWorkspace.activeSpaceDidChangeNotification`, distributed fallback)
-3. **Menu bar** — shows current custom name; simple rename alert; list of Spaces
+1. Launch the app (menu bar item; no Dock icon).
+2. **Configure Space Names…** (or rename from the menu).
+3. Switch Spaces — menu bar updates; overlay shows the name ~1.5s.
+4. **Control+Space** opens the switcher (filter, ↑↓, Enter to jump).
+5. Optional: **Launch at login** in the configuration window.
 
-Deferred: Heads-Up overlay, custom switcher jump, Mission Control strip (closed permanently).
+Jump order: in-process `CGSSetActiveSpace` → Control+Number (Accessibility) → on-screen instruction.
 
 ## Develop
 
 ```bash
-cd ~/IdeaProjects/SpaceNameTool
-swift test
-swift build
-# Run menu bar app (shows status item while process lives):
+swift test          # 29 unit tests
 swift run SpaceNameTool
 ```
 
-Specs: `docs/01-Requirements-SIP-Safe.md`, `docs/02-Technical-Specifications-SIP-Safe.md`, `docs/03-Security-Analysis-SIP-Safe.md`.
+## Documentation
+
+| Doc | Purpose |
+|-----|---------|
+| [`docs/01-Requirements-SIP-Safe.md`](docs/01-Requirements-SIP-Safe.md) | Requirements |
+| [`docs/02-Technical-Specifications-SIP-Safe.md`](docs/02-Technical-Specifications-SIP-Safe.md) | Architecture & keying |
+| [`docs/03-Security-Analysis-SIP-Safe.md`](docs/03-Security-Analysis-SIP-Safe.md) | Security analysis |
+| [`docs/FR_NFR_MATRIX.md`](docs/FR_NFR_MATRIX.md) | Completion matrix |
+| [`docs/ADVERSARIAL_REVIEW.md`](docs/ADVERSARIAL_REVIEW.md) | Adversarial review |
+| [`docs/UX_ACCEPTANCE.md`](docs/UX_ACCEPTANCE.md) | UX checklist |
+| [`docs/PACKAGING.md`](docs/PACKAGING.md) | Ship path |
+| [`CHANGELOG.md`](CHANGELOG.md) | Release notes |
+
+## Layout
+
+```
+Sources/SpaceNameToolCore/   # NameStore, topology, CGS, monitor, jump policy
+Sources/SpaceNameTool/       # Menu bar, config, overlay, switcher, login item
+Tests/SpaceNameToolTests/
+scripts/package-app.sh
+Resources/Info.plist
+```
+
+## Status
+
+**1.0 product code complete** against SIP-safe FR/NFR (see matrix).  
+**Operator remaining:** live Spaces UX walkthrough, optional notarization, multi-monitor hardware check.
 
 ## License
 

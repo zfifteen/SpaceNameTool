@@ -15,4 +15,12 @@ final class NameSanitizerTests: XCTestCase {
         let long = String(repeating: "a", count: 80)
         XCTAssertEqual(NameSanitizer.sanitize(long).count, NameSanitizer.maxLength)
     }
+
+    func testStripsDELAndC1() {
+        XCTAssertEqual(NameSanitizer.sanitize("ok\u{007F}\u{0081}x"), "okx")
+    }
+
+    func testEmptyAfterStrip() {
+        XCTAssertEqual(NameSanitizer.sanitize("\u{0001}\u{0002}"), "")
+    }
 }

@@ -28,4 +28,21 @@ final class CGSParseTests: XCTestCase {
         XCTAssertEqual(nodes[1].managedSpaceID, 222)
         XCTAssertEqual(nodes[1].index, 1)
     }
+
+    func testParseMissingSpacesYieldsEmpty() {
+        let display: [String: Any] = ["Display Identifier": "Main"]
+        let nodes = CGSPrivate.parseManagedDisplaySpaces([display as NSDictionary])
+        XCTAssertTrue(nodes.isEmpty)
+    }
+
+    func testParseLowercaseSpacesKey() {
+        let space: [String: Any] = ["SpaceID": NSNumber(value: 9)]
+        let display: [String: Any] = [
+            "Display Identifier": "AABB",
+            "spaces": [space]
+        ]
+        let nodes = CGSPrivate.parseManagedDisplaySpaces([display as NSDictionary])
+        XCTAssertEqual(nodes.count, 1)
+        XCTAssertEqual(nodes[0].managedSpaceID, 9)
+    }
 }

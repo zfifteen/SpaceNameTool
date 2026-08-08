@@ -26,7 +26,12 @@ public final class SpaceMonitor {
     private var pollTimer: Timer?
     private var usingPollFallback = false
     private var lastActiveManagedID: UInt64?
+    private var lastActivePersistentID: String?
     private var degradedReason: String?
+    private var notificationEventCount = 0
+
+    /// After this many seconds without a notification-driven change while CGS active id drifts, enable 1Hz poll.
+    public var pollWatchdogSeconds: TimeInterval = 30
 
     public init(
         nameStore: NameStore,
@@ -53,7 +58,6 @@ public final class SpaceMonitor {
             object: workspace
         )
 
-        // Distributed fallback used by some macOS builds.
         DistributedNotificationCenter.default().addObserver(
             self,
             selector: #selector(distributedSpaceSwitch(_:)),
@@ -61,15 +65,14 @@ public final class SpaceMonitor {
             object: nil
         )
 
-        // Initial scan.
         refresh(reason: "start")
 
-        // If CGS unavailable, degrade and optionally poll index-only later.
         if !CGSPrivate.isAvailable {
             let reason = CGSPrivate.availabilityError?.description
                 ?? "CGS read symbols unavailable"
             degradedReason = reason
             delegate?.spaceMonitorDegraded(reason: reason)
+            enablePollFallbackIfNeeded(force: true)
         }
     }
 
@@ -80,24 +83,24 @@ public final class SpaceMonitor {
         DistributedNotificationCenter.default().removeObserver(self)
         pollTimer?.invalidate()
         pollTimer = nil
+        usingPollFallback = false
     }
 
     /// Forces a topology + active refresh.
     public func refresh(reason: String = "manual") {
-        _ = reason
+        if reason == "activeSpaceDidChange" || reason == "com.apple.spaces.switch" {
+            notificationEventCount += 1
+        }
+
         let liveResult = CGSPrivate.copyLiveSpaces()
         let live: [LiveSpaceNode]
         switch liveResult {
         case .success(let nodes):
             live = nodes
-            if usingPollFallback {
-                // Notifications may have recovered; keep poll as safety only if we started it.
-            }
         case .failure(let error):
             let message = "Spaces API unavailable — names may shift until update. (\(error))"
             degradedReason = message
             delegate?.spaceMonitorDegraded(reason: message)
-            // Index-only degradation: invent a single placeholder on main display if store empty.
             live = degradedPlaceholderLiveSpaces()
         }
 
@@ -105,14 +108,11 @@ public final class SpaceMonitor {
         let activeManaged = CGSPrivate.activeSpaceID().value
         lastActiveManagedID = activeManaged
 
-        let activeRecord: SpaceRecord?
-        if let activeManaged {
-            activeRecord = nameStore.record(managedSpaceID: activeManaged)
-                ?? diff.activeRecords.first { $0.managedSpaceID == activeManaged }
-        } else {
-            // Fallback: first record with lastSeenIndex matching unknown — use lowest index on main.
-            activeRecord = diff.activeRecords.first
-        }
+        let activeRecord = resolveActiveRecord(
+            activeManaged: activeManaged,
+            activeRecords: diff.activeRecords
+        )
+        lastActivePersistentID = activeRecord?.persistentID
 
         delegate?.spaceMonitorDidUpdate(
             active: activeRecord,
@@ -122,10 +122,25 @@ public final class SpaceMonitor {
     }
 
     public func currentActiveRecord() -> SpaceRecord? {
-        if let id = CGSPrivate.activeSpaceID().value {
-            return nameStore.record(managedSpaceID: id)
+        let activeManaged = CGSPrivate.activeSpaceID().value
+        return resolveActiveRecord(
+            activeManaged: activeManaged,
+            activeRecords: nameStore.allRecords(includeArchived: false)
+        )
+    }
+
+    /// Resolves the active SpaceRecord from managed id, with index fallback.
+    public static func resolveActiveRecord(
+        activeManaged: UInt64?,
+        activeRecords: [SpaceRecord]
+    ) -> SpaceRecord? {
+        if let activeManaged {
+            if let match = activeRecords.first(where: { $0.managedSpaceID == activeManaged }) {
+                return match
+            }
         }
-        return nameStore.allRecords().first
+        // Degraded: prefer lowest index on main-ish display (first in sorted list).
+        return activeRecords.sorted { $0.lastSeenIndex < $1.lastSeenIndex }.first
     }
 
     // MARK: - Notifications
@@ -138,7 +153,7 @@ public final class SpaceMonitor {
         refresh(reason: "com.apple.spaces.switch")
     }
 
-    /// Enables 1Hz poll only when notifications appear dead (caller policy).
+    /// Enables 1Hz poll only when notifications appear dead or CGS degraded.
     public func enablePollFallbackIfNeeded(force: Bool = false) {
         guard force || degradedReason != nil else { return }
         guard pollTimer == nil else { return }
@@ -157,8 +172,14 @@ public final class SpaceMonitor {
         }
     }
 
+    private func resolveActiveRecord(
+        activeManaged: UInt64?,
+        activeRecords: [SpaceRecord]
+    ) -> SpaceRecord? {
+        Self.resolveActiveRecord(activeManaged: activeManaged, activeRecords: activeRecords)
+    }
+
     private func degradedPlaceholderLiveSpaces() -> [LiveSpaceNode] {
-        // Keep existing actives' indices as synthetic live nodes so we do not wipe names.
         let existing = nameStore.allRecords(includeArchived: false)
         if existing.isEmpty {
             return [

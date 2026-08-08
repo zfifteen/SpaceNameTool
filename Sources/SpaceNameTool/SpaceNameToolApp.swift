@@ -26,22 +26,30 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var menuBarController: MenuBarController?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Menu-bar app: hide from Dock (also set via LSUIElement in packaged Info.plist).
         NSApp.setActivationPolicy(.accessory)
 
         let store = NameStore()
         let monitor = SpaceMonitor(nameStore: store)
-        let menuBar = MenuBarController(nameStore: store, spaceMonitor: monitor)
+        let menuBar = MenuBarController(
+            nameStore: store,
+            spaceMonitor: monitor,
+            preferences: PreferencesStore.shared
+        )
 
         nameStore = store
         spaceMonitor = monitor
         menuBarController = menuBar
 
         menuBar.installStatusItem()
+
+        // Sync login preference if already enabled at OS level.
+        if LoginItemService.isEnabled {
+            PreferencesStore.shared.launchAtLogin = true
+        }
     }
 
     func applicationWillTerminate(_ notification: Notification) {
-        spaceMonitor?.stop()
+        menuBarController?.teardown()
         menuBarController = nil
         spaceMonitor = nil
         nameStore = nil
