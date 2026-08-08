@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Menu-bar only: no Dock icon -->
+	<key>LSUIElement</key>
+	<true/>
+
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleExecutable</key>
+	<string>SpaceNameTool</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.velocityworks.SpaceNameTool</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>SpaceNameTool</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+
+	<key>LSMinimumSystemVersion</key>
+	<string>13.0</string>
+
+	<!-- Hardened Runtime: no private entitlements required for notarization.
+	     Entitlements (when added) should stay to public, Apple-documented sets only
+	     (e.g. sandbox if chosen later). Do NOT add com.apple.security.cs.allow-dyld-environment-variables
+	     or disable-library-validation solely to enable injection. -->
+	<key>NSHighResolutionCapable</key>
+	<true/>
+	<key>NSSupportsAutomaticGraphicsSwitching</key>
+	<true/>
+
+	<!-- Accessibility / input: request only when implementing overlay rename UX.
+	     No private TCC or SIP-related keys here. -->
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright © VelocityWorks. SIP-safe; no code injection.</string>
+</dict>
+</plist>

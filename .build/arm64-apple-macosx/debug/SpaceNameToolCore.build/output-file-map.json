@@ -1,0 +1,54 @@
+{
+  "": {
+    "swift-dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/primary.swiftdeps"
+  },
+  "/Users/velocityworks/IdeaProjects/SpaceNameTool/Sources/SpaceNameToolCore/Models/DisplayID.swift": {
+    "dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/DisplayID.d",
+    "object": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/DisplayID.swift.o",
+    "swiftmodule": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/DisplayID~partial.swiftmodule",
+    "swift-dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/DisplayID.swiftdeps",
+    "diagnostics": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/DisplayID.dia"
+  },
+  "/Users/velocityworks/IdeaProjects/SpaceNameTool/Sources/SpaceNameToolCore/Models/SpaceRecord.swift": {
+    "dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/SpaceRecord.d",
+    "object": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/SpaceRecord.swift.o",
+    "swiftmodule": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/SpaceRecord~partial.swiftmodule",
+    "swift-dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/SpaceRecord.swiftdeps",
+    "diagnostics": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/SpaceRecord.dia"
+  },
+  "/Users/velocityworks/IdeaProjects/SpaceNameTool/Sources/SpaceNameToolCore/NameSanitizer.swift": {
+    "dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/NameSanitizer.d",
+    "object": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/NameSanitizer.swift.o",
+    "swiftmodule": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/NameSanitizer~partial.swiftmodule",
+    "swift-dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/NameSanitizer.swiftdeps",
+    "diagnostics": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/NameSanitizer.dia"
+  },
+  "/Users/velocityworks/IdeaProjects/SpaceNameTool/Sources/SpaceNameToolCore/NameStore.swift": {
+    "dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/NameStore.d",
+    "object": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/NameStore.swift.o",
+    "swiftmodule": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/NameStore~partial.swiftmodule",
+    "swift-dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/NameStore.swiftdeps",
+    "diagnostics": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/NameStore.dia"
+  },
+  "/Users/velocityworks/IdeaProjects/SpaceNameTool/Sources/SpaceNameToolCore/SpaceMonitor.swift": {
+    "dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/SpaceMonitor.d",
+    "object": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/SpaceMonitor.swift.o",
+    "swiftmodule": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/SpaceMonitor~partial.swiftmodule",
+    "swift-dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/SpaceMonitor.swiftdeps",
+    "diagnostics": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/SpaceMonitor.dia"
+  },
+  "/Users/velocityworks/IdeaProjects/SpaceNameTool/Sources/SpaceNameToolCore/TopologyReconciler.swift": {
+    "dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/TopologyReconciler.d",
+    "object": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/TopologyReconciler.swift.o",
+    "swiftmodule": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/TopologyReconciler~partial.swiftmodule",
+    "swift-dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/TopologyReconciler.swiftdeps",
+    "diagnostics": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/TopologyReconciler.dia"
+  },
+  "/Users/velocityworks/IdeaProjects/SpaceNameTool/Sources/SpaceNameToolCore/Utilities/CGSPrivate.swift": {
+    "dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/CGSPrivate.d",
+    "object": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/CGSPrivate.swift.o",
+    "swiftmodule": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/CGSPrivate~partial.swiftmodule",
+    "swift-dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/CGSPrivate.swiftdeps",
+    "diagnostics": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolCore.build/CGSPrivate.dia"
+  }
+}

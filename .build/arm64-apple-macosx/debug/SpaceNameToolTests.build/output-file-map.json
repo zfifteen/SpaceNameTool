@@ -1,0 +1,40 @@
+{
+  "": {
+    "swift-dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/primary.swiftdeps"
+  },
+  "/Users/velocityworks/IdeaProjects/SpaceNameTool/Tests/SpaceNameToolTests/CGSParseTests.swift": {
+    "dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/CGSParseTests.d",
+    "object": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/CGSParseTests.swift.o",
+    "swiftmodule": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/CGSParseTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/CGSParseTests.swiftdeps",
+    "diagnostics": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/CGSParseTests.dia"
+  },
+  "/Users/velocityworks/IdeaProjects/SpaceNameTool/Tests/SpaceNameToolTests/NameSanitizerTests.swift": {
+    "dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/NameSanitizerTests.d",
+    "object": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/NameSanitizerTests.swift.o",
+    "swiftmodule": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/NameSanitizerTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/NameSanitizerTests.swiftdeps",
+    "diagnostics": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/NameSanitizerTests.dia"
+  },
+  "/Users/velocityworks/IdeaProjects/SpaceNameTool/Tests/SpaceNameToolTests/NameStoreTests.swift": {
+    "dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/NameStoreTests.d",
+    "object": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/NameStoreTests.swift.o",
+    "swiftmodule": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/NameStoreTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/NameStoreTests.swiftdeps",
+    "diagnostics": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/NameStoreTests.dia"
+  },
+  "/Users/velocityworks/IdeaProjects/SpaceNameTool/Tests/SpaceNameToolTests/SpaceNameToolTests.swift": {
+    "dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/SpaceNameToolTests.d",
+    "object": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/SpaceNameToolTests.swift.o",
+    "swiftmodule": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/SpaceNameToolTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/SpaceNameToolTests.swiftdeps",
+    "diagnostics": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/SpaceNameToolTests.dia"
+  },
+  "/Users/velocityworks/IdeaProjects/SpaceNameTool/Tests/SpaceNameToolTests/TopologyReconcilerTests.swift": {
+    "dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/TopologyReconcilerTests.d",
+    "object": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/TopologyReconcilerTests.swift.o",
+    "swiftmodule": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/TopologyReconcilerTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/TopologyReconcilerTests.swiftdeps",
+    "diagnostics": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolTests.build/TopologyReconcilerTests.dia"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolPackageTests.build/primary.swiftdeps"
+  },
+  "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolPackageTests.derived/runner.swift": {
+    "dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolPackageTests.build/runner.d",
+    "object": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolPackageTests.build/runner.swift.o",
+    "swiftmodule": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolPackageTests.build/runner~partial.swiftmodule",
+    "swift-dependencies": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolPackageTests.build/runner.swiftdeps",
+    "diagnostics": "/Users/velocityworks/IdeaProjects/SpaceNameTool/.build/arm64-apple-macosx/debug/SpaceNameToolPackageTests.build/runner.dia"
+  }
+}
